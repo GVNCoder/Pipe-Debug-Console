@@ -9,13 +9,11 @@ namespace Pipe_Debug_Console
     {
         public readonly byte[] Buffer;
         public readonly StringBuilder StringBuilder;
-        public readonly NamedPipeServerStream Client;
 
-        public ReadMessageState(NamedPipeServerStream client, int bufferSize)
+        public ReadMessageState(int bufferSize)
         {
             Buffer = new byte[bufferSize];
             StringBuilder = new StringBuilder();
-            Client = client;
         }
     }
 }

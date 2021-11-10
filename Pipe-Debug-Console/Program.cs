@@ -1,8 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.IO.Pipes;
 using System.Linq;
 using System.Text;
+using System.IO.Pipes;
 
 namespace Pipe_Debug_Console
 {
@@ -19,11 +18,11 @@ namespace Pipe_Debug_Console
             // parse incoming arguments
             if (args.Length < MinArgumentsCount || args.Length > MaxArgumentsCount)
             {
-                Console.WriteLine("Error!");
+                Console.WriteLine("Invalid number of arguments.");
                 return;
             }
 
-            var pipeServerName = args.Single();
+            var pipeServerName = args.First();
             var pipeServer = new NamedPipeServerStream(pipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Message);
 
             Console.WriteLine(pipeServerName);
