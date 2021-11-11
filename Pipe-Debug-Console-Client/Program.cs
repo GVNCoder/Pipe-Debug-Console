@@ -8,13 +8,13 @@ namespace ClientTest
     {
         public static void Main(string[] args)
         {
-            var pipeServerName = "testPipe";
+            var pipeServerName = "test";
             var pipeClient =
                 new NamedPipeClientStream(".", pipeServerName, PipeDirection.Out);
 
             pipeClient.Connect();
 
-            var buffer = Encoding.UTF8.GetBytes("Bou bou bou");
+            var buffer = Encoding.UTF8.GetBytes("^eSome error text occured!");
             pipeClient.BeginWrite(buffer, 0, buffer.Length, asyncResult =>
             {
                 pipeClient.EndWrite(asyncResult);
