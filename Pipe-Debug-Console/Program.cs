@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 using CommandLine;
@@ -65,40 +66,43 @@ namespace Pipe_Debug_Console
 
                 var contextLabel = rawMessage[MessageContextLabelIndex];
                 var context = rawMessage[MessageContextIndex];
+                var availableContexts = new[] { 'i', 'd', 'w', 'e' };
 
-                if (contextLabel != MessageContextLabel)
+                if (contextLabel != MessageContextLabel || availableContexts.Contains(context) == false)
                 {
                     Console.WriteLine(rawMessage);
                 }
-
-                var message = rawMessage.Substring(MessageMinLength - 1);
-                var originalForeground = Console.ForegroundColor;
-
-                switch (context)
+                else
                 {
-                    case 'i': // info
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine($"[INF] {message}");
-                        Console.ForegroundColor = originalForeground;
-                        break;
-                    case 'd': // debug
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine($"[DBG] {message}");
-                        Console.ForegroundColor = originalForeground;
-                        break;
-                    case 'w': // warning
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine($"[WRN] {message}");
-                        Console.ForegroundColor = originalForeground;
-                        break;
-                    case 'e': // error
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"[ERR] {message}");
-                        Console.ForegroundColor = originalForeground;
-                        break;
-                    default:
-                        Console.WriteLine($"[UNK] {message}");
-                        break;
+                    var message = rawMessage.Substring(MessageMinLength - 1);
+                    var originalForeground = Console.ForegroundColor;
+
+                    switch (context)
+                    {
+                        case 'i': // info
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine($"[INF] {message}");
+                            Console.ForegroundColor = originalForeground;
+                            break;
+                        case 'd': // debug
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine($"[DBG] {message}");
+                            Console.ForegroundColor = originalForeground;
+                            break;
+                        case 'w': // warning
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine($"[WRN] {message}");
+                            Console.ForegroundColor = originalForeground;
+                            break;
+                        case 'e': // error
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"[ERR] {message}");
+                            Console.ForegroundColor = originalForeground;
+                            break;
+                        default:
+                            Console.WriteLine($"[UNK] {message}");
+                            break;
+                    }
                 }
             };
 
