@@ -13,7 +13,7 @@ namespace Pipe_Debug_Console
             Parser.Default.ParseArguments<RunOptions>(args)
                 .WithParsed(options =>
                 {
-                    if (Directory.GetFiles("\\\\.\\pipe\\", $"{options.PipeName}*").Length > 1)
+                    if (Directory.GetFiles("\\\\.\\pipe\\", $"{options.PipeName}*").Length != 0)
                     {
                         Console.WriteLine($"Such a named pipe ({options.PipeName}) already exists.");
                     }
