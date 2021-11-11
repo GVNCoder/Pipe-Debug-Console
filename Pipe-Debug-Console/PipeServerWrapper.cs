@@ -33,6 +33,9 @@ namespace Pipe_Debug_Console
 
         public void Start()
         {
+            // set some internal state
+            m_isStopping = false;
+
             try
             {
                 m_pipeServer.BeginWaitForConnection(WaitForConnectionCallback, null);

@@ -1,8 +1,7 @@
 {
   "profiles": {
     "Pipe-Debug-Console": {
-      "commandName": "Project",
-      "commandLineArgs": "testPipe"
+      "commandName": "Project"
     }
   }
 }
