@@ -13,8 +13,6 @@ namespace Pipe_Debug_Console
         [Option("bufferSize"
             , Required = false
             , Default = 1024
-            , Min = 256
-            , Max = 16384 // 16 KBytes
             , HelpText = "The size of the incoming buffer.")]
         public int IncomingBufferSize { get; set; }
     }
