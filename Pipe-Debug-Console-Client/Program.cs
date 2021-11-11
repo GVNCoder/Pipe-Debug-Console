@@ -1,30 +1,27 @@
 ﻿using System;
-using System.IO.Pipes;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace ClientTest
 {
     public static class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            var pipeServerName = "test";
-            var pipeClient =
-                new NamedPipeClientStream(".", pipeServerName, PipeDirection.Out);
+            var client = new PipeClientWrapper("test");
 
-            pipeClient.Connect();
+            client.Start();
 
-            var buffer = Encoding.UTF8.GetBytes("^eSome error text occured!");
-            pipeClient.BeginWrite(buffer, 0, buffer.Length, asyncResult =>
+            while (true)
             {
-                pipeClient.EndWrite(asyncResult);
-                pipeClient.Flush();
+                var userInput = Console.ReadLine();
 
-            }, null);
+                if (string.IsNullOrWhiteSpace(userInput))
+                {
+                    break;
+                }
 
-            pipeClient.WaitForPipeDrain();
-
-            Console.ReadKey();
+                await client.SendMessageAsync(userInput);
+            }
         }
     }
 }
