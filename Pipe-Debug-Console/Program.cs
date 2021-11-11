@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 using CommandLine;
@@ -8,6 +9,11 @@ namespace Pipe_Debug_Console
 {
     public static class Program
     {
+        private const char MessageContextLabel = '^';
+        private const int MessageMinLength = 3; // message context label char + context char + message content chars 1+
+        private const int MessageContextLabelIndex = 0;
+        private const int MessageContextIndex = 1;
+
         public static void Main(string[] args)
         {
             Parser.Default.ParseArguments<RunOptions>(args)
@@ -49,7 +55,52 @@ namespace Pipe_Debug_Console
 
             pipeServer.MessageReceived += (sender, args) =>
             {
-                // TODO: Process messages
+                // message template
+                // ^i[Message content]
+
+                var rawMessage = args.Message;
+                if (rawMessage.Length < MessageMinLength)
+                {
+                    return;
+                }
+
+                var contextLabel = rawMessage[MessageContextLabelIndex];
+                var context = rawMessage[MessageContextIndex];
+
+                if (contextLabel != MessageContextLabel)
+                {
+                    Console.WriteLine(rawMessage);
+                }
+
+                var message = rawMessage.Substring(MessageMinLength - 1);
+                var originalForeground = Console.ForegroundColor;
+
+                switch (context)
+                {
+                    case 'i': // info
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine($"[INF] {message}");
+                        Console.ForegroundColor = originalForeground;
+                        break;
+                    case 'd': // debug
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine($"[DBG] {message}");
+                        Console.ForegroundColor = originalForeground;
+                        break;
+                    case 'w': // warning
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine($"[WRN] {message}");
+                        Console.ForegroundColor = originalForeground;
+                        break;
+                    case 'e': // error
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"[ERR] {message}");
+                        Console.ForegroundColor = originalForeground;
+                        break;
+                    default:
+                        Console.WriteLine($"[UNK] {message}");
+                        break;
+                }
             };
 
             Console.Write("Waiting for client connection...");
