@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.IO.Pipes;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ClientTest
 {
@@ -40,18 +38,21 @@ namespace ClientTest
             }
         }
 
-        public void SendMessageAsync(string message)
+        public void SendMessageAndForget(string message)
         {
-            if (m_pipeClient.IsConnected)
+            if (m_pipeClient.IsConnected == false)
             {
-                var messageBuffer = Encoding.UTF8.GetBytes(message);
+                return;
+            }
 
+            var messageBuffer = Encoding.UTF8.GetBytes(message);
+            try
+            {
                 m_pipeClient.BeginWrite(messageBuffer, 0, messageBuffer.Length, EndWriteCallback, null);
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Cannot send message, pipe is not connected.");
-                throw new IOException("Pipe is not connected.");
+                // ignore
             }
         }
 
@@ -61,8 +62,15 @@ namespace ClientTest
 
         private void EndWriteCallback(IAsyncResult asyncResult)
         {
-            m_pipeClient.EndWrite(asyncResult);
-            m_pipeClient.Flush();
+            try
+            {
+                m_pipeClient.EndWrite(asyncResult);
+                m_pipeClient.Flush();
+            }
+            catch (Exception ex)
+            {
+                // ignore
+            }
         }
 
         #endregion

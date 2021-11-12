@@ -5,7 +5,7 @@ namespace ClientTest
 {
     public static class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             var client = new PipeClientWrapper("test");
 
@@ -20,7 +20,7 @@ namespace ClientTest
                     break;
                 }
 
-                client.SendMessageAsync(userInput);
+                client.SendMessageAndForget(userInput);
             }
         }
     }
