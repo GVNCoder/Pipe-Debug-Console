@@ -27,7 +27,6 @@ namespace ClientTest
             m_pipeClient.Connect();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         public void Stop()
         {
             try
@@ -41,45 +40,29 @@ namespace ClientTest
             }
         }
 
-        public Task<TaskResult> SendMessageAsync(string message)
+        public void SendMessageAsync(string message)
         {
-            var taskCompletionSource = new TaskCompletionSource<TaskResult>();
-
             if (m_pipeClient.IsConnected)
             {
-                var buffer = Encoding.UTF8.GetBytes(message);
-                m_pipeClient.BeginWrite(buffer, 0, buffer.Length, asyncResult =>
-                {
-                    try
-                    {
-                        taskCompletionSource.SetResult(EndWriteCallback(asyncResult));
-                    }
-                    catch (Exception ex)
-                    {
-                        taskCompletionSource.SetException(ex);
-                    }
+                var messageBuffer = Encoding.UTF8.GetBytes(message);
 
-                }, null);
+                m_pipeClient.BeginWrite(messageBuffer, 0, messageBuffer.Length, EndWriteCallback, null);
             }
             else
             {
                 Console.WriteLine("Cannot send message, pipe is not connected.");
                 throw new IOException("Pipe is not connected.");
             }
-
-            return taskCompletionSource.Task;
         }
 
         #endregion
 
         #region Async Callbacks
 
-        private TaskResult EndWriteCallback(IAsyncResult asyncResult)
+        private void EndWriteCallback(IAsyncResult asyncResult)
         {
             m_pipeClient.EndWrite(asyncResult);
             m_pipeClient.Flush();
-
-            return new TaskResult { IsSuccess = true };
         }
 
         #endregion

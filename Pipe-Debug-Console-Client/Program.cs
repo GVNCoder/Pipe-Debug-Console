@@ -20,7 +20,7 @@ namespace ClientTest
                     break;
                 }
 
-                await client.SendMessageAsync(userInput);
+                client.SendMessageAsync(userInput);
             }
         }
     }
