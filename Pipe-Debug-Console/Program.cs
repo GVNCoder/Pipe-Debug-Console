@@ -100,7 +100,7 @@ namespace Pipe_Debug_Console
                             Console.ForegroundColor = originalForeground;
                             break;
                         default:
-                            Console.WriteLine($"[UNK] {message}");
+                            Console.WriteLine($"[UNK] {rawMessage}");
                             break;
                     }
                 }

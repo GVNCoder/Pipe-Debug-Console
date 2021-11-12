@@ -1,5 +1,4 @@
-﻿using System.IO.Pipes;
-using System.Text;
+﻿using System.Text;
 
 // ReSharper disable MemberCanBePrivate.Global
 
