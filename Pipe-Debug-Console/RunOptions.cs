@@ -10,7 +10,8 @@ namespace Pipe_Debug_Console
             , HelpText = "Pipe name to create a server.")]
         public string PipeName { get; set; }
 
-        [Option("bufferSize"
+        [Option('b'
+            , "bufferSize"
             , Required = false
             , Default = 1024
             , HelpText = "The size of the incoming buffer.")]

@@ -13,6 +13,9 @@ namespace Pipe_Debug_Console
         private const int MessageMinLength = 3; // message context label char + context char + message content chars 1+
         private const int MessageContextLabelIndex = 0;
         private const int MessageContextIndex = 1;
+        private const int MessageServiceDataLength = 2;
+
+        private static readonly char[] AvailableContexts = { 'i', 'd', 'w', 'e' };
 
         public static void Main(string[] args)
         {
@@ -66,15 +69,14 @@ namespace Pipe_Debug_Console
 
                 var contextLabel = rawMessage[MessageContextLabelIndex];
                 var context = rawMessage[MessageContextIndex];
-                var availableContexts = new[] { 'i', 'd', 'w', 'e' };
 
-                if (contextLabel != MessageContextLabel || availableContexts.Contains(context) == false)
+                if (contextLabel != MessageContextLabel || AvailableContexts.Contains(context) == false)
                 {
-                    Console.WriteLine(rawMessage);
+                    Console.WriteLine($"[UNK] {rawMessage}");
                 }
                 else
                 {
-                    var message = rawMessage.Substring(MessageMinLength - 1);
+                    var message = rawMessage.Substring(MessageServiceDataLength);
                     var originalForeground = Console.ForegroundColor;
 
                     switch (context)
@@ -98,9 +100,6 @@ namespace Pipe_Debug_Console
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine($"[ERR] {message}");
                             Console.ForegroundColor = originalForeground;
-                            break;
-                        default:
-                            Console.WriteLine($"[UNK] {rawMessage}");
                             break;
                     }
                 }
